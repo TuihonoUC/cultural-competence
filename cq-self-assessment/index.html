@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cultural Intelligence Self-Assessment</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        /* CSS Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Root Variables - Original Design Values */
+        :root {
+            /* Colors */
+            --primary-color: #f1c40f;
+            --bg-color: #faecea;
+            --text-light: #4a4a4a;
+            --text-lighter: #3a3a3a;
+            --text-dark: #2a2a2a;
+            --text-gray: #5a5a5a;
+            --text-medium: #6a6a6a;
+            --text-dim: #7a7a7a;
+            
+            --bg-overlay-light: rgba(255, 255, 255, 0.5);
+            --bg-overlay-medium: rgba(255, 255, 255, 0.6);
+            --bg-overlay-hover: rgba(255, 255, 255, 0.7);
+            --bg-overlay-heavy: rgba(255, 255, 255, 0.8);
+            --bg-overlay-button: rgba(255, 255, 255, 0.7);
+            --bg-overlay-button-hover: rgba(255, 255, 255, 0.85);
+            
+            --success-color: #4CAF50;
+            --success-bg: rgba(76, 175, 80, 0.2);
+            --success-bg-light: rgba(76, 175, 80, 0.3);
+            --success-bg-medium: rgba(76, 175, 80, 0.35);
+            --success-bg-heavy: rgba(76, 175, 80, 0.5);
+            --success-border: rgba(76, 175, 80, 0.6);
+            
+            --transition-default: all 0.3s ease;
+            --transition-smooth: all 0.4s ease;
+            --transition-slow: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            
+            --radius-small: 3px;
+            --radius-medium: 8px;
+            --radius-large: 15px;
+            --radius-xlarge: 20px;
+            --radius-button: 30px;
+            
+            --spacing-small: 12px;
+            --spacing-medium: 20px;
+            --spacing-large: 25px;
+            --spacing-xlarge: 35px;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-color);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Universal scrollbar styling */
+        *::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+        }
+
+        *::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: var(--radius-medium);
+        }
+
+        *::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: var(--radius-medium);
+            border: 2px solid var(--bg-color);
+        }
+
+        *::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        /* Specific scrollbar for quiz content - visible */
+        .quiz-content::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .quiz-content::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .quiz-content::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            border: 1px solid var(--bg-color);
+        }
+
+        .quiz-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        /* Hide scrollbar for results */
+        .quiz-results::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .quiz-results::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .quiz-results::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            border: 1px solid var(--bg-color);
+        }
+
+        .quiz-results::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        /* Container Styles */
+        .quiz-container {
+            background: var(--bg-color);
+            width: 90%;
+            max-width: 800px;
+            height: 90vh;
+            max-height: 600px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Progress Bar */
+        .quiz-progress {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-progress__fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--success-color) 100%);
+            transition: var(--transition-slow);
+            width: 0%;
+        }
+
+        /* Content Area */
+        .quiz-content {
+            flex: 1;
+            padding: 25px 40px 20px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .quiz-scale-hint {
+            text-align: center;
+            color: #6a6a6a;
+            font-size: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            line-height: 1.6;
+            font-weight: 400;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Mobile break - hidden by default */
+        .mobile-break {
+            display: none;
+        }
+        
+        /* Show break on mobile screens */
+        @media (max-width: 750px) {
+            .mobile-break {
+                display: block;
+            }
+            .mobile-hide {
+                display: none;
+            }
+        }
+
+        /* Question Groups */
+        .quiz-question-group {
+            display: none;
+            opacity: 0;
+        }
+
+        .quiz-question-group--active {
+            display: block;
+            animation: gentleFadeIn 1s ease forwards;
+        }
+
+        @keyframes gentleFadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+            }
+        }
+
+        /* Questions */
+        .quiz-question {
+            margin-bottom: 15px;
+            padding: var(--spacing-medium);
+            background: transparent;
+            border-radius: var(--radius-xlarge);
+            transition: var(--transition-default);
+            border: none;
+        }
+
+        .quiz-question:hover {
+            background: transparent;
+        }
+
+        .quiz-question__text {
+            font-size: 16px;
+            color: var(--text-lighter);
+            margin-bottom: 18px;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        /* Rating Options */
+        .quiz-rating {
+            display: flex;
+            justify-content: space-between;
+            gap: var(--spacing-small);
+        }
+
+        .quiz-rating__option {
+            flex: 1;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: var(--radius-large);
+            cursor: pointer;
+            transition: var(--transition-default);
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 18px;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .quiz-rating__option:hover {
+            background: var(--success-bg);
+            color: var(--text-dark);
+            border-color: var(--success-color);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .quiz-rating__option--selected {
+            background: var(--success-color);
+            color: #000000;
+            border-color: var(--success-color);
+            font-weight: 700;
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+        }
+
+        /* Navigation */
+        .quiz-nav {
+            padding: 25px 40px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quiz-nav__button {
+            padding: 14px 35px;
+            border: none;
+            border-radius: var(--radius-button);
+            font-size: 17px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            background: rgba(0, 0, 0, 0.1);
+            color: var(--text-dark);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .quiz-nav__button--prev:hover:not(:disabled) {
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        .quiz-nav__button--next:not(:disabled), 
+        .quiz-nav__button--submit:not(:disabled) {
+            background: var(--success-color);
+            color: #ffffff;
+        }
+
+        .quiz-nav__button--next:hover:not(:disabled), 
+        .quiz-nav__button--submit:hover:not(:disabled) {
+            background: #45a049;
+        }
+
+        .quiz-nav__button:disabled {
+            opacity: 0.2;
+            cursor: not-allowed;
+        }
+
+        .quiz-nav__indicator {
+            font-size: 15px;
+            color: var(--text-medium);
+            font-weight: 400;
+        }
+
+        /* Results Screen */
+        .quiz-results {
+            display: none;
+            padding: var(--spacing-xlarge) 0;
+            height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .quiz-results--active {
+            display: flex;
+            flex-direction: column;
+            animation: gentleFadeIn 1.2s ease;
+        }
+
+        /* Results main layout - three columns */
+        .quiz-results-main {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 25px;
+            flex: 1;
+            padding: 15px 0;
+        }
+
+        .quiz-results-image-section {
+            flex: 0 0 auto;
+        }
+
+        .quiz-info-section {
+            flex: 1;
+            max-width: 400px;
+            padding: 0;
+        }
+
+        /* Results image - reduced by 15% */
+        .quiz-results-image {
+            height: 340px;
+            max-height: 70%;
+            width: auto;
+            display: block;
+            object-fit: contain;
+            /* Prevent layout shift while loading */
+            min-height: 340px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: var(--radius-large);
+        }
+
+        /* Quiz Level - normal styling */
+        .quiz-level {
+            font-size: 23px;
+            font-weight: 500;
+            color: var(--text-dark);
+            margin-bottom: 18px;
+        }
+
+        /* Score styling - matches title but smaller */
+        .quiz-score {
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 18px; /* A couple pixels smaller than the 23px title */
+        }
+
+        /* Results description */
+        .quiz-results-description {
+            font-size: 17px;
+            line-height: 1.8;
+            color: var(--text-dark);
+            margin-bottom: 25px;
+        }
+
+        /* Results-specific backgrounds - customizable for different themes */
+        .quiz-results--theme-fullygrown {
+            background: radial-gradient(ellipse at center, rgba(46, 134, 171, 0.1) 0%, transparent 70%);
+        }
+
+        .quiz-results--theme-midsized {
+            background: radial-gradient(ellipse at center, rgba(76, 175, 80, 0.1) 0%, transparent 70%);
+        }
+
+        .quiz-results--theme-youth {
+            background: radial-gradient(ellipse at center, rgba(139, 195, 74, 0.1) 0%, transparent 70%);
+        }
+
+        .quiz-results--theme-seedling {
+            background: radial-gradient(ellipse at center, rgba(52, 152, 219, 0.1) 0%, transparent 70%);
+        }
+
+        /* Thumbnails Section - now a vertical column */
+        .quiz-thumbnails {
+            flex: 0 0 auto;
+            width: auto;
+            padding-left: 25px;
+            padding-right: 25px;
+            margin-left: auto;
+            border-left: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .quiz-thumbnails__title {
+            text-align: center;
+            color: var(--text-dark);
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+            width: 100%;
+        }
+
+        .quiz-thumbnails__title:hover {
+            color: var(--text-dark);
+        }
+
+        .quiz-thumbnails__grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .quiz-thumbnail {
+            position: relative;
+            cursor: pointer;
+            transition: var(--transition-default);
+            border-radius: var(--radius-medium);
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 6px;
+        }
+
+        .quiz-thumbnail:hover {
+            transform: translateY(2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .quiz-thumbnail--active {
+            outline: 3px solid var(--primary-color);
+            outline-offset: 2px;
+            background: rgba(241, 196, 15, 0.1);
+        }
+
+        .quiz-thumbnail__image {
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .quiz-thumbnail__label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 2px 4px;
+            font-size: 10px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .quiz-thumbnail--active .quiz-thumbnail__label {
+            background: var(--primary-color);
+            color: var(--text-dark);
+        }
+
+        /* Replay Button */
+        .quiz-replay-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 0px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .quiz-replay-button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: var(--radius-button);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            background: var(--success-color);
+            color: #ffffff;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .quiz-replay-button:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .quiz-replay-button:active {
+            transform: translateY(0);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 599px) {
+            .quiz-container {
+                width: 95%;
+                height: 95vh;
+                max-height: none;
+                border-radius: var(--radius-xlarge);
+            }
+
+            .quiz-rating {
+                flex-wrap: wrap;
+            }
+
+            .quiz-rating__option {
+                min-width: 45%;
+            }
+
+            .quiz-nav__button {
+                padding: 12px 25px;
+                font-size: 15px;
+            }
+
+            /* Stack results for mobile */
+            .quiz-results-main {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .quiz-results-image {
+                height: 250px;
+                max-height: 80%;
+                min-height: 250px;
+            }
+
+            .quiz-info-section {
+                text-align: center;
+                max-width: 100%;
+            }
+
+            /* Thumbnails go horizontal on mobile */
+            .quiz-thumbnails {
+                width: 100%;
+                margin-top: 20px;
+                padding-top: 20px;
+                border-top: 1px solid rgba(0, 0, 0, 0.1);
+            }
+
+            .quiz-thumbnails__grid {
+                flex-direction: row;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+        }
+
+        /* Accessibility */
+        .quiz-rating__option:focus,
+        .quiz-nav__button:focus {
+            outline: 3px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        /* Reduced Motion Support */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <!-- Progress Bar -->
+        <div class="quiz-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="quiz-progress__fill" id="progressFill"></div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="quiz-content" id="quizContent">
+            <div class="quiz-scale-hint" role="note" id="scaleHint">
+                1 = Strongly Disagree | 2 = Disagree | 3 = Neutral<span class="mobile-break"></span><span class="mobile-hide"> |</span> 4 = Agree | 5 = Strongly Agree
+            </div>
+            <!-- Question groups will be inserted here -->
+        </div>
+
+
+        <!-- Navigation -->
+        <div class="quiz-nav" id="quizNavigation">
+            <button class="quiz-nav__button quiz-nav__button--prev" id="prevButton" aria-label="Previous section">
+                Previous
+            </button>
+            <span class="quiz-nav__indicator" id="pageIndicator" aria-live="polite">Section 1 of 4</span>
+            <button class="quiz-nav__button quiz-nav__button--next" id="nextButton" aria-label="Next section">
+                Next
+            </button>
+        </div>
+
+        <!-- Results Container -->
+        <div class="quiz-results" id="resultsContainer" aria-label="Assessment results">
+            <div class="quiz-results-main">
+                <div class="quiz-results-image-section">
+                    <img class="quiz-results-image" id="resultsImage" src="" alt="">
+                </div>
+                <div class="quiz-info-section">
+                    <div class="quiz-level" id="quizLevel"></div>
+                    <div class="quiz-results-description" id="resultsDescription"></div>
+                </div>
+                <!-- Thumbnails Section - now in third column -->
+                <div class="quiz-thumbnails" id="thumbnailsContainer">
+                    <a class="quiz-thumbnails__title" id="exploreThumbnails" href="#thumbnailsGrid">All Results</a>
+                    <div class="quiz-thumbnails__grid" id="thumbnailsGrid">
+                        <!-- Thumbnails will be inserted here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Replay Button -->
+            <div class="quiz-replay-container">
+                <button class="quiz-replay-button" id="replayButton">Replay</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // QUIZ CONFIGURATION - EASILY CUSTOMIZABLE
+        // ============================================
+        
+        const QUIZ_CONFIG = {
+            // Number of questions to show per page
+            questionsPerPage: 5,
+            
+            // SCORING MODE - Choose how the quiz calculates results
+            // Options:
+            // - 'simple': Just adds up all ratings (default)
+            // - 'weighted': Multiplies each question by its weight
+            // - 'category': Results based on highest-scoring category
+            // - 'custom': Use your own scoring function
+            scoringMode: 'simple',
+            
+            // QUESTIONS ARRAY
+            // Each question must have:
+            // - id: unique identifier (required)
+            // - category: which category it belongs to (required)
+            // - text: the question text (required)
+            // - weight: importance multiplier for weighted scoring (optional, default: 1)
+            // - reverse: true if high ratings should count as low scores (optional, default: false)
+            //
+            // Examples:
+            // { id: 1, category: "Anxiety", text: "I feel calm", weight: 2, reverse: false }
+            // { id: 2, category: "Anxiety", text: "I feel nervous", weight: 1, reverse: true }
+            questions: [
+                { id: 1, category: "CQ Drive", text: "I enjoy interacting with people from different cultural backgrounds." },
+                { id: 2, category: "CQ Drive", text: "I am confident I can adapt when cross-cultural situations become difficult." },
+                { id: 3, category: "CQ Drive", text: "I actively seek opportunities to work with people from different cultures." },
+                { id: 4, category: "CQ Drive", text: "I find cross-cultural situations energising rather than draining." },
+                { id: 5, category: "CQ Drive", text: "I believe that experiencing different cultures makes me a better professional." },
+                { id: 6, category: "CQ Knowledge", text: "I understand how cultural values affect business practices." },
+                { id: 7, category: "CQ Knowledge", text: "I know the cultural history and traditions of several cultures." },
+                { id: 8, category: "CQ Knowledge", text: "I understand how culture shapes thinking and behaviour." },
+                { id: 9, category: "CQ Knowledge", text: "I can identify when cultural differences are affecting a business situation." },
+                { id: 10, category: "CQ Knowledge", text: "I know how to research and learn about unfamiliar cultures." },
+                { id: 11, category: "CQ Strategy", text: "I plan my approach before cross-cultural interactions." },
+                { id: 12, category: "CQ Strategy", text: "I monitor my behaviour during cross-cultural encounters." },
+                { id: 13, category: "CQ Strategy", text: "I adjust my understanding when I receive new cultural information." },
+                { id: 14, category: "CQ Strategy", text: "I check whether my cross-cultural interactions are going well." },
+                { id: 15, category: "CQ Strategy", text: "I revise my assumptions about culture based on new experiences." },
+                { id: 16, category: "CQ Action", text: "I can modify my communication style when needed." },
+                { id: 17, category: "CQ Action", text: "I adapt my non-verbal behaviour to different cultural contexts." },
+                { id: 18, category: "CQ Action", text: "I can change my approach when cross-cultural situations require it." },
+                { id: 19, category: "CQ Action", text: "I adjust my leadership style based on cultural context." },
+                { id: 20, category: "CQ Action", text: "I can negotiate effectively across cultural differences." }
+            ],
+            
+            // Categories - Define the categories used in your questions
+            categories: ["CQ Drive", "CQ Knowledge", "CQ Strategy", "CQ Action"],
+            
+            // RESULTS CONFIGURATION
+            // Define different results based on score ranges
+            // The quiz automatically normalizes scores to 0-100 scale
+            results: {
+                // FOR 'simple' AND 'weighted' SCORING MODES
+                // Shows results based on total score ranges
+                bands: [
+                    {
+                        minScore: 80,      // Minimum score for this result
+                        maxScore: 100,     // Maximum score for this result
+                        title: "You have a high CQ",  // Result title shown to user
+                        className: "fullygrown",        // CSS class for styling
+                        description: "Your cultural confidence is flourishing and those around you are benefitting from the shared light of your understanding. You can continue to grow taller, more robust, and more beneficial to your environment.",
+                        image: "images/1-ponga-grown.png"  // Image path for this result
+                    },
+                    {
+                        minScore: 60,
+                        maxScore: 79,
+                        title: "You have a moderate CQ",
+                        className: "midsized",
+                        description: "You can hold space with other cultures with awareness and a measure of confidence. Like this ponga lifting towards the sun, you are developing cultural adaptability through experience and knowledge.",
+                        image: "images/2-ponga-nearlythere.png"
+                    },
+                    {
+                        minScore: 40,
+                        maxScore: 59,
+                        title: "You have a developing CQ",
+                        className: "youth",
+                        description: "Like this young ponga, you are reaching out. You recognise that there is growth to be had and you have begun to engage with new and unfamiliar ways to expand your cultural confidence.",
+                        image: "images/2-ponga-mid2.png"
+                    },
+                    {
+                        minScore: 0,
+                        maxScore: 39,
+                        title: "You have a beginning CQ",
+                        className: "fern",
+                        description: "Your knowledge is unfurling, like a new shoot (piko), you are beginning to notice other cultures but haven't yet stretched beyond the early stage.",
+                        image: "images/4_ponga-seedling.png"
+                    }
+                ],
+                
+                // FOR 'category' SCORING MODE
+                // Shows results based on which category scored highest
+                // Example: Learning styles quiz, personality type quiz
+                categoryResults: [
+                    // Uncomment and modify if using category scoring
+                    // {
+                    //     category: "Visual",
+                    //     title: "Visual Learner",
+                    //     className: "visual",
+                    //     description: "You learn best through images and visual representations",
+                    //     image: "images/visual.png"
+                    // }
+                ]
+            },
+            
+            // FOR 'custom' SCORING MODE
+            // Write your own scoring logic
+            // Function receives: (answers, questions)
+            // Must return object with at least: { totalScore: number }
+            customScoringFunction: null
+        };
+
+        // ============================================
+        // HOW TO CREATE YOUR OWN QUIZ
+        // ============================================
+        
+        // 1. CHANGE THE QUESTIONS:
+        // Replace the questions array with your own questions
+        // Example:
+        // questions: [
+        //     { id: 1, category: "Math", text: "I enjoy solving math problems" },
+        //     { id: 2, category: "Science", text: "I like conducting experiments" }
+        // ]
+        
+        // 2. UPDATE CATEGORIES:
+        // Change the categories array to match your question categories
+        // Example:
+        // categories: ["Math", "Science", "English", "History"]
+        
+        // 3. CUSTOMIZE RESULTS:
+        // Modify the results bands to show different outcomes
+        // Example:
+        // bands: [
+        //     {
+        //         minScore: 80,
+        //         maxScore: 100,
+        //         title: "Expert Level",
+        //         className: "expert",
+        //         description: "You have mastered this subject!",
+        //         image: "images/expert.png"
+        //     }
+        // ]
+        
+        // 4. SCORING:
+        // The quiz uses a 1-5 rating scale (Strongly Disagree to Strongly Agree)
+        // Scores are automatically normalized to 0-100:
+        // - All 1s = 0 points
+        // - All 3s = 50 points  
+        // - All 5s = 100 points
+        
+        // 5. IMAGES:
+        // Place your result images in an "images" folder
+        // Update the image paths in the results configuration
+        
+        // 6. STYLING:
+        // Each result band's className is used for the background gradient
+        // The CSS class .quiz-results--theme-[className] can be styled
+
+        // ============================================
+        // ADVANCED SCORING OPTIONS
+        // ============================================
+        
+        // WEIGHTED SCORING EXAMPLE:
+        // scoringMode: 'weighted',
+        // questions: [
+        //     { id: 1, text: "Important question", weight: 2 },
+        //     { id: 2, text: "Less important", weight: 1 }
+        // ]
+        
+        // REVERSE SCORING EXAMPLE:
+        // questions: [
+        //     { id: 1, text: "I avoid challenges", reverse: true },
+        //     { id: 2, text: "I embrace challenges", reverse: false }
+        // ]
+        
+        // CATEGORY-BASED RESULTS EXAMPLE:
+        // scoringMode: 'category',
+        // results: {
+        //     categoryResults: [
+        //         {
+        //             category: "Visual",
+        //             title: "Visual Learner",
+        //             description: "You learn best through images",
+        //             image: "images/visual.png"
+        //         }
+        //     ]
+        // }
+        
+        // CUSTOM SCORING EXAMPLE:
+        // scoringMode: 'custom',
+        // customScoringFunction: (answers, questions) => {
+        //     let totalScore = 0;
+        //     // Custom logic here
+        //     return { totalScore: totalScore };
+        // }
+
+        // ============================================
+        // QUIZ ENGINE - NO NEED TO MODIFY
+        // ============================================
+        class QuizEngine {
+            constructor(config) {
+                this.config = config;
+                this.currentGroup = 0;
+                this.answers = {};
+                this.elements = {};
+                this.userScore = null; // Store the user's actual score
+                this.init();
+            }
+
+            init() {
+                this.initializeElements();
+                this.preloadImages();
+                this.renderQuestionGroups();
+                this.showGroup(0);
+                this.updateProgress();
+                this.setupEventListeners();
+            }
+
+            initializeElements() {
+                this.elements = {
+                    progressFill: document.getElementById('progressFill'),
+                    quizContent: document.getElementById('quizContent'),
+                    prevButton: document.getElementById('prevButton'),
+                    nextButton: document.getElementById('nextButton'),
+                    pageIndicator: document.getElementById('pageIndicator'),
+                    resultsContainer: document.getElementById('resultsContainer'),
+                    resultsImage: document.getElementById('resultsImage'),
+                    resultsDescription: document.getElementById('resultsDescription'),
+                    quizLevel: document.getElementById('quizLevel'),
+                    thumbnailsGrid: document.getElementById('thumbnailsGrid'),
+                    exploreThumbnails: document.getElementById('exploreThumbnails'),
+                    replayButton: document.getElementById('replayButton')
+                };
+            }
+
+            preloadImages() {
+                // Preload all result images to prevent layout shift
+                const imageUrls = [];
+                
+                // Get images from score bands
+                if (this.config.results.bands) {
+                    this.config.results.bands.forEach(band => {
+                        if (band.image) {
+                            imageUrls.push(band.image);
+                        }
+                    });
+                }
+                
+                // Get images from category results if they exist
+                if (this.config.results.categoryResults) {
+                    this.config.results.categoryResults.forEach(result => {
+                        if (result.image) {
+                            imageUrls.push(result.image);
+                        }
+                    });
+                }
+                
+                // Preload each image
+                imageUrls.forEach(url => {
+                    const img = new Image();
+                    img.src = url;
+                });
+            }
+
+            createQuestionHTML(question) {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'quiz-question';
+                
+                const questionText = document.createElement('div');
+                questionText.className = 'quiz-question__text';
+                questionText.textContent = `${question.id}. ${question.text}`;
+                
+                const ratingDiv = document.createElement('div');
+                ratingDiv.className = 'quiz-rating';
+                ratingDiv.setAttribute('role', 'radiogroup');
+                
+                for (let rating = 1; rating <= 5; rating++) {
+                    const option = document.createElement('button');
+                    option.className = 'quiz-rating__option';
+                    option.setAttribute('role', 'radio');
+                    option.setAttribute('aria-checked', 'false');
+                    option.setAttribute('data-question', question.id);
+                    option.setAttribute('data-rating', rating);
+                    option.id = `q${question.id}-r${rating}`;
+                    option.textContent = rating;
+                    option.addEventListener('click', (e) => this.handleRatingClick(e));
+                    ratingDiv.appendChild(option);
+                }
+                
+                questionDiv.appendChild(questionText);
+                questionDiv.appendChild(ratingDiv);
+                return questionDiv;
+            }
+
+            renderQuestionGroups() {
+                const fragment = document.createDocumentFragment();
+                const totalGroups = Math.ceil(this.config.questions.length / this.config.questionsPerPage);
+                
+                for (let i = 0; i < totalGroups; i++) {
+                    const group = document.createElement('div');
+                    group.className = 'quiz-question-group';
+                    group.id = `group-${i}`;
+                    
+                    const startIdx = i * this.config.questionsPerPage;
+                    const endIdx = Math.min(startIdx + this.config.questionsPerPage, this.config.questions.length);
+                    
+                    for (let j = startIdx; j < endIdx; j++) {
+                        group.appendChild(this.createQuestionHTML(this.config.questions[j]));
+                    }
+                    
+                    fragment.appendChild(group);
+                }
+                
+                this.elements.quizContent.appendChild(fragment);
+            }
+
+            handleRatingClick(event) {
+                const button = event.currentTarget;
+                const questionId = parseInt(button.dataset.question);
+                const rating = parseInt(button.dataset.rating);
+                this.selectRating(questionId, rating);
+            }
+
+            selectRating(questionId, rating) {
+                this.answers[questionId] = rating;
+                
+                const options = document.querySelectorAll(`[data-question="${questionId}"]`);
+                options.forEach(option => {
+                    const isSelected = parseInt(option.dataset.rating) === rating;
+                    option.classList.toggle('quiz-rating__option--selected', isSelected);
+                    option.setAttribute('aria-checked', isSelected);
+                });
+                
+                this.updateNavigation();
+                this.updateProgress();
+            }
+
+            showGroup(groupIndex) {
+                this.currentGroup = groupIndex;
+                
+                document.querySelectorAll('.quiz-question-group').forEach(group => {
+                    group.classList.remove('quiz-question-group--active');
+                });
+                
+                const targetGroup = document.getElementById(`group-${groupIndex}`);
+                if (targetGroup) {
+                    targetGroup.classList.add('quiz-question-group--active');
+                }
+                
+                this.elements.quizContent.scrollTop = 0;
+                this.updateNavigation();
+                this.restoreSelections();
+            }
+
+            restoreSelections() {
+                Object.entries(this.answers).forEach(([questionId, rating]) => {
+                    const option = document.getElementById(`q${questionId}-r${rating}`);
+                    if (option) {
+                        option.classList.add('quiz-rating__option--selected');
+                        option.setAttribute('aria-checked', 'true');
+                    }
+                });
+            }
+
+            updateNavigation() {
+                const totalGroups = Math.ceil(this.config.questions.length / this.config.questionsPerPage);
+                const isFirstGroup = this.currentGroup === 0;
+                const isLastGroup = this.currentGroup === totalGroups - 1;
+                
+                this.elements.prevButton.disabled = isFirstGroup;
+                
+                const startIdx = this.currentGroup * this.config.questionsPerPage;
+                const endIdx = Math.min(startIdx + this.config.questionsPerPage, this.config.questions.length);
+                const allAnswered = Array.from({ length: endIdx - startIdx }, (_, i) => 
+                    this.answers.hasOwnProperty(this.config.questions[startIdx + i].id)
+                ).every(Boolean);
+                
+                if (isLastGroup) {
+                    this.elements.nextButton.textContent = 'Submit';
+                    this.elements.nextButton.className = 'quiz-nav__button quiz-nav__button--submit';
+                } else {
+                    this.elements.nextButton.textContent = 'Next';
+                    this.elements.nextButton.className = 'quiz-nav__button quiz-nav__button--next';
+                }
+                
+                this.elements.nextButton.disabled = !allAnswered;
+                this.elements.pageIndicator.textContent = `Section ${this.currentGroup + 1} of ${totalGroups}`;
+            }
+
+            updateProgress() {
+                const answeredCount = Object.keys(this.answers).length;
+                const progress = (answeredCount / this.config.questions.length) * 100;
+                this.elements.progressFill.style.width = `${progress}%`;
+                document.querySelector('.quiz-progress').setAttribute('aria-valuenow', Math.round(progress));
+            }
+
+            calculateScores() {
+                const scoringMode = this.config.scoringMode || 'simple';
+                
+                switch (scoringMode) {
+                    case 'weighted':
+                        return this.calculateWeightedScores();
+                    case 'category':
+                        return this.calculateCategoryScores();
+                    case 'custom':
+                        return this.calculateCustomScores();
+                    default:
+                        return this.calculateSimpleScores();
+                }
+            }
+            
+            calculateSimpleScores() {
+                const categoryScores = this.config.categories.reduce((acc, category) => {
+                    acc[category] = 0;
+                    return acc;
+                }, {});
+                
+                let totalScore = 0;
+                
+                this.config.questions.forEach(question => {
+                    let score = this.answers[question.id] || 0;
+                    
+                    // Handle reverse scoring
+                    if (question.reverse) {
+                        score = 6 - score; // For 1-5 scale: 5 becomes 1, 1 becomes 5
+                    }
+                    
+                    totalScore += score;
+                    categoryScores[question.category] += score;
+                });
+                
+                // Normalize score to 0-100 scale
+                const minPossible = this.config.questions.length * 1;
+                const maxPossible = this.config.questions.length * 5;
+                const normalizedScore = Math.round(((totalScore - minPossible) / (maxPossible - minPossible)) * 100);
+                
+                return { 
+                    totalScore: normalizedScore,
+                    rawScore: totalScore,
+                    categoryScores,
+                    scoringMode: 'simple'
+                };
+            }
+            
+            calculateWeightedScores() {
+                const categoryScores = this.config.categories.reduce((acc, category) => {
+                    acc[category] = 0;
+                    return acc;
+                }, {});
+                
+                let totalScore = 0;
+                let totalWeight = 0;
+                
+                this.config.questions.forEach(question => {
+                    let score = this.answers[question.id] || 0;
+                    const weight = question.weight || 1;
+                    
+                    // Handle reverse scoring
+                    if (question.reverse) {
+                        score = 6 - score;
+                    }
+                    
+                    const weightedScore = score * weight;
+                    totalScore += weightedScore;
+                    totalWeight += weight;
+                    categoryScores[question.category] += weightedScore;
+                });
+                
+                // Normalize to 0-100 scale
+                const normalizedScore = Math.round((totalScore / (totalWeight * 5)) * 100);
+                
+                return { 
+                    totalScore: normalizedScore,
+                    rawScore: totalScore,
+                    categoryScores,
+                    scoringMode: 'weighted'
+                };
+            }
+            
+            calculateCategoryScores() {
+                const categoryScores = this.config.categories.reduce((acc, category) => {
+                    acc[category] = 0;
+                    return acc;
+                }, {});
+                
+                const categoryCounts = this.config.categories.reduce((acc, category) => {
+                    acc[category] = 0;
+                    return acc;
+                }, {});
+                
+                this.config.questions.forEach(question => {
+                    let score = this.answers[question.id] || 0;
+                    
+                    // Handle reverse scoring
+                    if (question.reverse) {
+                        score = 6 - score;
+                    }
+                    
+                    categoryScores[question.category] += score;
+                    categoryCounts[question.category]++;
+                });
+                
+                // Calculate average score per category
+                const categoryAverages = {};
+                Object.keys(categoryScores).forEach(category => {
+                    if (categoryCounts[category] > 0) {
+                        categoryAverages[category] = categoryScores[category] / categoryCounts[category];
+                    }
+                });
+                
+                // Find dominant category
+                const dominantCategory = Object.entries(categoryAverages)
+                    .sort((a, b) => b[1] - a[1])[0];
+                
+                return { 
+                    categoryScores,
+                    categoryAverages,
+                    dominantCategory: dominantCategory[0],
+                    dominantScore: dominantCategory[1],
+                    scoringMode: 'category'
+                };
+            }
+            
+            calculateCustomScores() {
+                if (this.config.customScoringFunction && typeof this.config.customScoringFunction === 'function') {
+                    return {
+                        ...this.config.customScoringFunction(this.answers, this.config.questions),
+                        scoringMode: 'custom'
+                    };
+                }
+                
+                // Fallback to simple scoring if no custom function provided
+                return this.calculateSimpleScores();
+            }
+
+            getResultBand(scores) {
+                const scoringMode = scores.scoringMode || 'simple';
+                
+                switch (scoringMode) {
+                    case 'category':
+                        // Find result based on dominant category
+                        if (this.config.results.categoryResults && this.config.results.categoryResults.length > 0) {
+                            return this.config.results.categoryResults.find(result => 
+                                result.category === scores.dominantCategory
+                            );
+                        }
+                        // Fallback to score bands if no category results defined
+                        return this.config.results.bands.find(band => 
+                            scores.totalScore >= band.minScore && scores.totalScore <= band.maxScore
+                        );
+                        
+                    default:
+                        // For simple, weighted, and custom scoring, use score bands
+                        return this.config.results.bands.find(band => 
+                            scores.totalScore >= band.minScore && scores.totalScore <= band.maxScore
+                        );
+                }
+            }
+
+            submitQuiz() {
+                const scores = this.calculateScores();
+                const resultBand = this.getResultBand(scores);
+                
+                if (!resultBand) {
+                    console.error('No result band found for scores:', scores);
+                    return;
+                }
+                
+                // Store the user's actual score
+                this.userScore = scores.totalScore;
+                
+                // Hide quiz elements
+                this.elements.quizContent.style.display = 'none';
+                document.getElementById('quizNavigation').style.display = 'none';
+                
+                // Show results
+                this.elements.resultsContainer.classList.add('quiz-results--active');
+                this.elements.resultsContainer.classList.add(`quiz-results--theme-${resultBand.className}`);
+                
+                // Set result content
+                this.displayResult(resultBand, scores.totalScore);
+                
+                // Create thumbnails
+                this.createThumbnails(resultBand);
+                
+                // Trigger completion event for Rise
+                if (window.parent) {
+                    window.parent.postMessage({
+                        type: 'quiz-complete',
+                        scores: scores,
+                        result: resultBand.title
+                    }, '*');
+                }
+            }
+            
+            displayResult(resultBand, score = null) {
+                this.elements.resultsImage.src = resultBand.image;
+                this.elements.resultsImage.alt = `${resultBand.className} illustration`;
+                this.elements.resultsDescription.textContent = resultBand.description;
+                
+                // Display title with or without score
+                if (score !== null) {
+                    this.elements.quizLevel.innerHTML = `${resultBand.title} <span class="quiz-score">(${score})</span>`;
+                } else {
+                    this.elements.quizLevel.textContent = resultBand.title;
+                }
+                
+                // Add error handling for image
+                this.elements.resultsImage.onerror = () => {
+                    console.error('Failed to load image:', resultBand.image);
+                    // Don't hide the image, just log the error
+                };
+                
+                // Update theme class
+                const container = this.elements.resultsContainer;
+                // Remove any existing theme classes
+                container.className = container.className.replace(/quiz-results--theme-\w+/g, '');
+                container.classList.add('quiz-results--active');
+                container.classList.add(`quiz-results--theme-${resultBand.className}`);
+            }
+            
+            createThumbnails(resultBand) {
+                const thumbnailsGrid = this.elements.thumbnailsGrid;
+                thumbnailsGrid.innerHTML = '';
+                
+                // Store the user's actual result
+                this.userResult = resultBand;
+                
+                // Get all possible results
+                const allResults = this.config.results.bands || [];
+                
+                allResults.forEach(result => {
+                    const thumbnail = document.createElement('div');
+                    thumbnail.className = 'quiz-thumbnail';
+                    
+                    // Highlight the user's actual result (and keep it highlighted)
+                    if (result.className === this.userResult.className) {
+                        thumbnail.classList.add('quiz-thumbnail--active');
+                    }
+                    
+                    const img = document.createElement('img');
+                    img.className = 'quiz-thumbnail__image';
+                    img.src = result.image;
+                    img.alt = `${result.title} thumbnail`;
+                    
+                    const label = document.createElement('div');
+                    label.className = 'quiz-thumbnail__label';
+                    label.textContent = result.title.replace('You have a ', '').replace('You have ', '');
+                    
+                    thumbnail.appendChild(img);
+                    thumbnail.appendChild(label);
+                    
+                    // Add click handler
+                    thumbnail.addEventListener('click', () => {
+                        // Don't change the active state - keep it permanently on user's result
+                        // Just display the selected result
+                        // Show score only if this is the user's actual result
+                        const isUserResult = result.className === this.userResult.className;
+                        this.displayResult(result, isUserResult ? this.userScore : null);
+                    });
+                    
+                    thumbnailsGrid.appendChild(thumbnail);
+                });
+            }
+
+            handlePrevious() {
+                if (this.currentGroup > 0) {
+                    this.showGroup(this.currentGroup - 1);
+                }
+            }
+
+            handleNext() {
+                const totalGroups = Math.ceil(this.config.questions.length / this.config.questionsPerPage);
+                if (this.currentGroup === totalGroups - 1) {
+                    this.submitQuiz();
+                } else {
+                    this.showGroup(this.currentGroup + 1);
+                }
+            }
+
+            setupEventListeners() {
+                this.elements.prevButton.addEventListener('click', () => this.handlePrevious());
+                this.elements.nextButton.addEventListener('click', () => this.handleNext());
+                
+                // Replay button
+                if (this.elements.replayButton) {
+                    this.elements.replayButton.addEventListener('click', () => this.restartQuiz());
+                }
+                
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowLeft' && !this.elements.prevButton.disabled) {
+                        this.handlePrevious();
+                    } else if (e.key === 'ArrowRight' && !this.elements.nextButton.disabled) {
+                        this.handleNext();
+                    }
+                });
+            }
+            
+            restartQuiz() {
+                // Reset state
+                this.currentGroup = 0;
+                this.answers = {};
+                this.userScore = null;
+                
+                // Hide results
+                this.elements.resultsContainer.classList.remove('quiz-results--active');
+                this.elements.resultsContainer.className = 'quiz-results';
+                
+                // Show quiz elements
+                this.elements.quizContent.style.display = 'block';
+                document.getElementById('quizNavigation').style.display = 'flex';
+                
+                // Clear all selections
+                document.querySelectorAll('.quiz-rating__option').forEach(option => {
+                    option.classList.remove('quiz-rating__option--selected');
+                    option.setAttribute('aria-checked', 'false');
+                });
+                
+                // Reset to first group
+                this.showGroup(0);
+                this.updateProgress();
+                this.updateNavigation();
+                
+                // Scroll to top
+                this.elements.quizContent.scrollTop = 0;
+                window.scrollTo(0, 0);
+            }
+        }
+
+        // Initialize quiz when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                new QuizEngine(QUIZ_CONFIG);
+            });
+        } else {
+            new QuizEngine(QUIZ_CONFIG);
+        }
+    </script>
+</body>
+</html>
